@@ -1,22 +1,22 @@
 version: '3'
 
 services:
-  # backend:
-  #   build: ./backend
-  #   command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-  #   volumes:
-  #     - ./backend:/app
-  #   ports:
-  #     - "8000:8000"
-  #   depends_on:
-  #     - postgres
+  backend:
+    build: ./backend
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
 
-  # ui-app:
-  #   build: ./ui-app
-  #   ports:
-  #     - "8080:80"  # Map Nginx port 80 in the container to port 8080 on the host
-  #   depends_on:
-  #     - backend
+  ui-app:
+    build: ./ui-app
+    ports:
+      - "8080:80"  # Map Nginx port 80 in the container to port 8080 on the host
+    depends_on:
+      - backend
 
   postgres:
     image: postgres:13
