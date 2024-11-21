@@ -43,6 +43,7 @@ const UserList = () => {
         axios.delete(`http://localhost:8000/api/users/${id}/`)
             .then(response => {
                 console.log('User deleted:', response.data);
+                setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
             })
             .catch(error => console.error('Error deleting user:', error));
     };
