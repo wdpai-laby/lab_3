@@ -19,6 +19,7 @@ const UserList = () => {
 
     // Pobieranie użytkowników z backendu
     useEffect(() => {
+        console.log("Pobieranie użytkowników");
         axios.get('http://localhost:8000/api/users/')
             .then(response => {
                 console.log('Users:', response.data);
@@ -34,6 +35,7 @@ const UserList = () => {
         axios.post('http://localhost:8000/api/users/', newUser)
             .then(response => {
                 console.log('User added:', response.data);
+                setUsers((prevUsers) => [...prevUsers, response.data]);
             })
             .catch(error => console.error('Error adding user:', error));
     };
@@ -54,7 +56,7 @@ const UserList = () => {
                 <div className="title">
                     Let's level up your brand, together
                 </div>
-                <form action="">
+                <form onSubmit={e => e.preventDefault()}>
                     <div className="htmlForm-group">
                         <label htmlFor="first_name" className="label">First name</label>
                         <input 
