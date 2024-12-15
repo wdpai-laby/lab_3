@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './UserList.css';
 
@@ -17,22 +18,28 @@ const UserList = () => {
         role: ''
     });
 
-    // Pobieranie użytkowników z backendu
+    const token = sessionStorage.getItem('token');
+    const navigate = useNavigate(); 
+
     useEffect(() => {
+        if (!token) {
+            navigate('/login');
+            return; 
+        }
         console.log("Pobieranie użytkowników");
-        axios.get('http://localhost:8000/api/users/')
+        axios.get('http://localhost:8000/api/business-users/', { headers: { Authorization: `Bearer ${token}` } })
             .then(response => {
                 console.log('Users:', response.data);
                 setUsers(response.data);
             })
-            .catch(error => console.error('Error fetching users:', error));
-
-            console.log('Users:', users);
-    }, []);
+            .catch(error => {
+                console.error('Error fetching users:', error);
+            });
+    }, [token, navigate]);
 
     // Dodawanie użytkownika
     const handleAddUser = () => {
-        axios.post('http://localhost:8000/api/users/', newUser)
+        axios.post('http://localhost:8000/api/business-users/', newUser, { headers: { Authorization: `Bearer ${token}` } })
             .then(response => {
                 console.log('User added:', response.data);
                 setUsers((prevUsers) => [...prevUsers, response.data]);
@@ -42,12 +49,17 @@ const UserList = () => {
 
     // Usuwanie użytkownika
     const handleDeleteUser = (id: Number) => {
-        axios.delete(`http://localhost:8000/api/users/${id}/`)
+        axios.delete(`http://localhost:8000/api/business-users/${id}/`, { headers: { Authorization: `Bearer ${token}` } })
             .then(response => {
                 console.log('User deleted:', response.data);
                 setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
             })
             .catch(error => console.error('Error deleting user:', error));
+    };
+
+    // Navigate to user details
+    const handleNavigateToUser = (id: number) => {
+        navigate(`/business-users/${id}`);
     };
 
     return (
@@ -98,14 +110,17 @@ const UserList = () => {
             <div className="response-container">
                 {users && users.length > 0 ? (
                     users.map((user) => (
-                    <div className='response-item' key={user.id}>
-                        <div className='response-fullname'>
+                    <div className="response-item" key={user.id}>
+                        <div 
+                            className="response-fullname" 
+                            onClick={() => handleNavigateToUser(user.id)} 
+                        >
                             {user.first_name + ' ' + user.last_name}
                         </div> 
-                        <div className='delete-img'onClick={() => handleDeleteUser(user.id)}>
+                        <div className="delete-img" onClick={() => handleDeleteUser(user.id)}>
                             🗑️
                         </div>
-                        <div className='response-role'>
+                        <div className="response-role">
                             {user.role}
                         </div>
                     </div>
@@ -119,4 +134,3 @@ const UserList = () => {
 };
 
 export default UserList;
-
