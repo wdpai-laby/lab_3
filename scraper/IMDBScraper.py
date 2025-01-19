@@ -53,10 +53,10 @@ with sync_playwright() as p:
                 if not film_id:
                     film_id = cur.execute("INSERT INTO api_film (title, year, duration) VALUES (%s, %s, %s) RETURNING id_film", (movie_dict["title"], movie_dict["year"], movie_dict["duration"])).fetchone()
                 film_id = film_id[0]
-                # if len(cur.execute("SELECT id_film FROM api_imbdfilm WHERE id_file = %s", (film_id)).fetchall()) > 0:
-                    # cur.execute("UPDATE api_imdbfilm SET rating = %s, votes = %s WHERE id_film = %s", (movie_dict["rating"], movie_dict["votes"], film_id))
-                # else:
-                cur.execute("INSERT INTO api_imdbfilm(id_film, rating, votes) VALUES (%s, %s, %s)", (film_id, movie_dict["rating"], movie_dict["votes"]))   
+                if cur.execute("SELECT * FROM api_imdbfilm WHERE id_film = %s", (film_id,)).fetchone() is not None:
+                    cur.execute("UPDATE api_imdbfilm SET rating = %s, votes = %s WHERE id_film = %s", (movie_dict["rating"], movie_dict["votes"], film_id))
+                else:
+                    cur.execute("INSERT INTO api_imdbfilm(id_film, rating, votes) VALUES (%s, %s, %s)", (film_id, movie_dict["rating"], movie_dict["votes"]))   
     
     # Close the browser
     browser.close()
