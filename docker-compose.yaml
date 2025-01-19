@@ -41,6 +41,12 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
+  scraper:
+    build: ./scraper
+    command: sh -c "xvfb-run -a python /scraper/IMDBScraper.py"
+    depends_on:
+      - postgres
+
 volumes:
   postgres_data:
   pgadmin_data:
