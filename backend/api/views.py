@@ -2,9 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Film, FilmwebFilm, RottenFilm, IMDBFilm
-from .serializers import FilmSerializer, FilmwebFilmSerializer, RottenFilmSerializer, IMDBFilmSerializer
-from .serializers import RegisterSerializer, SystemUserSerializer
+from .models import CombinedFilms
+from .serializers import RegisterSerializer, SystemUserSerializer, CombinedFilmsSerializer
 from django.contrib.auth import get_user_model
 
 
@@ -16,15 +15,9 @@ SystemUser = get_user_model()
 @permission_classes([AllowAny])
 def film_list(request):
     if request.method == 'GET':
-        films = Film.objects.all()
-        filmweb_films = FilmwebFilm.objects.all()
-        rotten_films = RottenFilm.objects.all()
-        imdb_films = IMDBFilm.objects.all()
-        serializer = FilmSerializer(films, many=True)
-        filmweb_serializer = FilmwebFilmSerializer(filmweb_films, many=True)
-        rotten_serializer = RottenFilmSerializer(rotten_films, many=True)
-        imdb_serializer = IMDBFilmSerializer(imdb_films, many=True)
-        return Response(serializer.data + filmweb_serializer.data + rotten_serializer.data + imdb_serializer.data)
+        films = CombinedFilms.objects.all()
+        serializer = CombinedFilmsSerializer(films, many=True)
+        return Response(serializer.data)
 
     # elif request.method == 'POST':
     #     serializer = FilmSerializer(data=request.data)

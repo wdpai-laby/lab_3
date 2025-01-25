@@ -39,34 +39,14 @@ const FilmList = () => {
                                 title: item.title,
                                 year: item.year,
                                 duration: item.duration,
+                                rating: item.rating,
+                                votes: item.votes,
+                                score: item.score,
+                                critics_score: item.critics_score,
+                                user_score: item.user_score,
                             });
                         }
-                    } else if (item.id_imdbfilm && item.id_film) {
-                        // Merge IMDb data into the corresponding Film
-                        const film = filmMap.get(item.id_film);
-                        if (film) {
-                            film.rating = item.rating;
-                            film.votes = item.votes;
-                        }
-                    } else if (item.id_film && item.score) {
-                        // Merge Filmweb score
-                        const film = filmMap.get(item.id_film);
-                        if (film) {
-                            film.score = item.score;
-                        }
-                    } else if (item.id_film && item.critics_score) {
-                        // Merge Rotten Tomatoes critics score
-                        const film = filmMap.get(item.id_film);
-                        if (film) {
-                            film.critics_score = item.critics_score;
-                        }
-                    } else if (item.id_film && item.user_score) {
-                        // Merge Rotten Tomatoes user score
-                        const film = filmMap.get(item.id_film);
-                        if (film) {
-                            film.user_score = item.user_score;
-                        }
-                    }
+                    } 
                 });
 
                 // Convert the Map back to an array

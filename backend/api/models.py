@@ -54,6 +54,23 @@ class IMDBFilm(models.Model):
     def __str__(self):
         return f'{self.film.title} ({self.film.year})'
 
+class CombinedFilms(models.Model):
+    id_film = models.IntegerField(primary_key=True)
+    title = models.CharField(max_length=255)
+    year = models.IntegerField()
+    duration = models.CharField(max_length=50)
+    score = models.FloatField()
+    critics_score = models.IntegerField()
+    user_score = models.IntegerField()
+    rating = models.FloatField()
+    votes = models.IntegerField()
+
+    class Meta:
+        managed = False  # Don't let Django try to create, alter, or delete this table
+        db_table = 'combinedfilms'  # This is the name of your database view
+
+    def __str__(self):
+        return f'{self.film.title} ({self.film.year})'
     
 class SystemUser(AbstractUser):
     """
