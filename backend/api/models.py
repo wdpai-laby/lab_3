@@ -1,6 +1,26 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
+class SystemUser(AbstractUser):
+    """
+    Custom user model for the system.
+    """
+    email = models.EmailField(unique=True)
+
+    groups = models.ManyToManyField(
+        Group,
+        related_name="custom_user_set",
+        blank=True,
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name="custom_user_permissions_set",
+        blank=True,
+    )
+
+    def __str__(self):
+        return self.username
+
 class Film(models.Model):
     id_film = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
@@ -54,6 +74,24 @@ class IMDBFilm(models.Model):
     def __str__(self):
         return f'{self.film.title} ({self.film.year})'
 
+class FavoriteFilms(models.Model):
+    id_favourite = models.AutoField(primary_key=True)
+    id_film = models.ForeignKey(
+        Film,
+        on_delete=models.CASCADE,  # Deletes the FavoriteFilms entry if the Film is deleted
+        related_name='favorite_entries',
+        db_column='id_film'
+    )
+    id_system_user = models.ForeignKey(
+        SystemUser,
+        on_delete=models.CASCADE,  # Deletes the FavoriteFilms entry if the SystemUser is deleted
+        related_name='favorite_films',
+        db_column='id_system_user'
+    )
+
+    def __str__(self):
+        return f'Film: {self.id_film.title}, User: {self.id_user.username}'
+
 class CombinedFilms(models.Model):
     id_film = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=255)
@@ -71,24 +109,4 @@ class CombinedFilms(models.Model):
 
     def __str__(self):
         return f'{self.film.title} ({self.film.year})'
-    
-class SystemUser(AbstractUser):
-    """
-    Custom user model for the system.
-    """
-    email = models.EmailField(unique=True)
-
-    groups = models.ManyToManyField(
-        Group,
-        related_name="custom_user_set",
-        blank=True,
-    )
-    user_permissions = models.ManyToManyField(
-        Permission,
-        related_name="custom_user_permissions_set",
-        blank=True,
-    )
-
-    def __str__(self):
-        return self.username
     

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import film_list, register, system_user_detail
+from .views import film_list, register, system_user_detail, favorites, favorites_delete
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -8,4 +8,6 @@ urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Endpoint for POST
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Endpoint for POST
     path('me/', system_user_detail, name='system-user-detail'),  # Endpoint for GET
+    path('favorites/', favorites, name='favorites'), # Endpoint for GET, POST
+    path('favorites/<int:pk>/', favorites_delete, name='favorites-delete') # Endpoint for DELETE
 ]

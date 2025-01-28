@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Film, FilmwebFilm, RottenFilm, IMDBFilm, CombinedFilms, SystemUser
+from .models import Film, FilmwebFilm, RottenFilm, IMDBFilm, CombinedFilms, SystemUser, FavoriteFilms
 
 class FilmSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,6 +25,11 @@ class CombinedFilmsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CombinedFilms
         fields = ['id_film', 'title', 'year', 'duration', 'score', 'critics_score', 'user_score', 'rating', 'votes']
+
+class FavoriteFilmsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FavoriteFilms
+        fields = ['id_favourite', 'id_film', 'id_system_user']
 
 # Serializery dla SystemUser
 class RegisterSerializer(serializers.ModelSerializer):

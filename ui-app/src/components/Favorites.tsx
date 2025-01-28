@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./FilmList.css";
 
-const FilmList = () => {
+const Favorites = () => {
     interface Film {
         id_film: number;
         title: string;
@@ -194,4 +194,4 @@ const FilmList = () => {
     );
 };
 
-export default FilmList;
+export default Favorites;
