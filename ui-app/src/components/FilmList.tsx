@@ -23,42 +23,41 @@ const FilmList = () => {
     const [favourites, setFavourites] = useState<Set<number>>(new Set()); // Set of favorite film IDs
 
     useEffect(() => {
-        const token = sessionStorage.getItem("token"); // Replace with your token mechanism
+        const token = sessionStorage.getItem("token");
         if (token) {
             setIsAuthenticated(true);
             setAuthToken(token);
         }
-        axios
-            .get("http://localhost:8000/api/film-list/")
+    
+        // Pobranie listy filmów
+        axios.get("http://localhost:8000/api/film-list/")
             .then((response) => {
-                const rawData = response.data;
-                const filmData: Film[] = [];
-                const filmMap = new Map();
-
-                rawData.forEach((item: any) => {
-                    if (item.id_film && item.title) {
-                        if (!filmMap.has(item.id_film)) {
-                            filmMap.set(item.id_film, {
-                                id_film: item.id_film,
-                                title: item.title,
-                                year: item.year,
-                                duration: item.duration,
-                                rating: item.rating,
-                                votes: item.votes,
-                                score: item.score,
-                                critics_score: item.critics_score,
-                                user_score: item.user_score,
-                            });
-                        }
-                    }
-                });
-
-                filmMap.forEach((film) => filmData.push(film));
+                const filmData: Film[] = response.data.map((item: any) => ({
+                    id_film: item.id_film,
+                    title: item.title,
+                    year: item.year,
+                    duration: item.duration,
+                    rating: item.rating,
+                    votes: item.votes,
+                    score: item.score,
+                    critics_score: item.critics_score,
+                    user_score: item.user_score,
+                }));
                 setFilms(filmData);
             })
-            .catch((error) => {
-                console.error("Error fetching films:", error);
-            });
+            .catch((error) => console.error("Error fetching films:", error));
+    
+        // Pobranie ulubionych filmów
+        if (token) {
+            axios.get("http://localhost:8000/api/favorites/", {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then((response) => {
+                const favouriteIds: Set<number> = new Set(response.data.map((fav: { id_film: number }) => fav.id_film));
+                setFavourites(favouriteIds);
+            })
+            .catch((error) => console.error("Error fetching favorites:", error));
+        }
     }, []);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,16 +94,12 @@ const FilmList = () => {
                     { id_film },
                     { headers: { Authorization: `Bearer ${authToken}` } }
                 )
-                .then(() => {
-                    alert("Film added to favourites");
-                })
                 .catch((error) => {
                     console.error("Error adding to favourites:", error);
 
                     // Revert UI changes on error
                     updatedFavourites.delete(id_film);
                     setFavourites(new Set(updatedFavourites));
-                    alert("An error occurred while adding to favourites.");
                 });
         } else {
             // Remove from favourites (DELETE request)
@@ -112,16 +107,12 @@ const FilmList = () => {
                 .delete(`http://localhost:8000/api/favorites/${id_film}/`, {
                     headers: { Authorization: `Bearer ${authToken}` },
                 })
-                .then(() => {
-                    alert("Film removed from favourites");
-                })
                 .catch((error) => {
                     console.error("Error removing from favourites:", error);
 
                     // Revert UI changes on error
                     updatedFavourites.add(id_film);
                     setFavourites(new Set(updatedFavourites));
-                    alert("An error occurred while removing from favourites.");
                 });
         }
     };

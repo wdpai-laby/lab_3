@@ -58,4 +58,4 @@ class SystemUserSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = SystemUser
-        fields = ['email', 'groups', 'user_permissions']
+        fields = ['email', 'groups', 'user_permissions', "username", "first_name", "last_name"]

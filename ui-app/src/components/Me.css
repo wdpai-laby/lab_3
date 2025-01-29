@@ -1,0 +1,73 @@
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.user-info p {
+    font-size: 16px;
+    margin: 10px 0;
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-info button,
+.edit-form button {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.user-info button {
+    background-color: #007bff;
+    color: white;
+}
+
+.user-info button:hover {
+    background-color: #0056b3;
+}
+
+.edit-form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.edit-form input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.edit-form button {
+    background-color: #28a745;
+    color: white;
+    margin-right: 10px;
+}
+
+.edit-form button:hover {
+    background-color: #218838;
+}
+
+.edit-form button:last-child {
+    background-color: #dc3545;
+}
+
+.edit-form button:last-child:hover {
+    background-color: #c82333;
+}

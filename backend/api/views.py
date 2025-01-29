@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import CombinedFilms, FavoriteFilms
 from .serializers import RegisterSerializer, SystemUserSerializer, CombinedFilmsSerializer, FavoriteFilmsSerializer
 from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 SystemUser = get_user_model()
@@ -32,14 +33,34 @@ def register(request):
                 serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST
         )
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout(request):
+    try:
+        refresh_token = request.data["refresh"]
+        token = RefreshToken(refresh_token)
+        token.blacklist()  # Blacklist the token
+        return Response({"message": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
+    except Exception as e:
+        return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
-
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def system_user_detail(request):
-    user = SystemUser.objects.get(pk=request.user.id)
-    serializer = SystemUserSerializer(user)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        user = SystemUser.objects.get(pk=request.user.id)
+        serializer = SystemUserSerializer(user)
+        return Response(serializer.data)
+    if request.method == 'PUT':
+        user = SystemUser.objects.get(pk=request.user.id)
+        serializer = SystemUserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 @api_view(['GET', "POST"])
 @permission_classes([IsAuthenticated])
