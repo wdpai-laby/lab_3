@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Me'
+import './Me.css';
 
 const Me = () => {
     const [user, setUser] = useState<any>(null);
@@ -89,8 +89,8 @@ const Me = () => {
                     <label>Email:</label>
                     <input type="email" name="email" value={formData.email} onChange={handleChange} />
 
-                    <button onClick={handleSave}>Save</button>
-                    <button onClick={() => setIsEditing(false)}>Cancel</button>
+                    <button className='save-button' onClick={handleSave}>Save</button>
+                    <button className='cancel-button' onClick={() => setIsEditing(false)}>Cancel</button>
                 </div>
             ) : (
                 <div className="user-info">

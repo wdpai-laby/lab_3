@@ -5,7 +5,6 @@
     background-color: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
 }
 
 h2 {
@@ -46,7 +45,7 @@ h2 {
 }
 
 .edit-form input {
-    width: 100%;
+    width: 95%;
     padding: 8px;
     margin-top: 5px;
     border: 1px solid #ccc;
@@ -54,20 +53,20 @@ h2 {
     font-size: 14px;
 }
 
-.edit-form button {
+.save-button {
     background-color: #28a745;
     color: white;
     margin-right: 10px;
 }
 
-.edit-form button:hover {
+.save-button:hover {
     background-color: #218838;
 }
 
-.edit-form button:last-child {
+.cancel-button {
     background-color: #dc3545;
 }
 
-.edit-form button:last-child:hover {
+.cancel-button:hover {
     background-color: #c82333;
 }

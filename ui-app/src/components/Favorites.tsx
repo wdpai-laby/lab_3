@@ -95,7 +95,7 @@ const Favorites = () => {
                             {film.user_score && <p>RT User Score: {film.user_score}%</p>}
                             
                             <button className="remove-button" onClick={() => removeFromFavorites(film.id_film)}>
-                                Remove from Favorites
+                               ❌ 
                             </button>
                         </div>
                     ))}
